@@ -59,8 +59,9 @@ def _live_reasons(
         if real and not reasons:
             reasons.append("deployed page is not a placeholder and the repo has a real build")
         return reasons
-    if real and github is not None:
-        return [f"no deploy observation; repo has {len(github.content_files)} content files"]
+    # A repository observation describes source code, not a deployment. Do
+    # not promote it to ``live`` when no homepage/deployment observation was
+    # collected: fixture-only data is not an operational verification.
     return []
 
 

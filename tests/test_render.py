@@ -3,7 +3,7 @@ from domain_fleet.render import render_html, render_text
 
 def test_text_report_lists_counts_and_a_ready_row(sample_report):
     text = render_text(sample_report)
-    assert "6 live · 4 stub · 0 unknown · 2 content · 1 config · 8 merge-ready" in text
+    assert "6 live · 4 stub · 0 unknown · 2 content · 1 config · 7 merge-ready" in text
     assert "STUB    corruptofficertracker.com" in text
     assert '[ready  ] Merge #4 "Replace the coming-soon page with the public index"' in text
     assert "whdecklog.com" in text

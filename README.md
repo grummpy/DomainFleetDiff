@@ -43,7 +43,7 @@ Abbreviated. The command prints every site.
 
 ```text
 Domain Fleet Diff  fixture  hub grummpy/my_domains  2026-10-01T00:00:00Z
-10 sites · 6 live · 4 stub · 0 unknown · 2 content · 1 config · 8 merge-ready
+10 sites · 6 live · 4 stub · 0 unknown · 2 content · 1 config · 7 merge-ready
 
 STUB    reliablerealtymanagement.com  Reliable Realty Management
         bot rrm-bot  repo grummpy/reliablerealtymanagement
@@ -56,7 +56,8 @@ STUB    corruptofficertracker.com  Corrupt Officer Tracker
         [info   ] After #4 merges, rerun the scan and deploy main. Hostinger is still serving the default page.
 
 LIVE    whdecklog.com  WH Deck Log
-        [done   ] No action. Deployed commit matches e55ce00 and the hub config.
+        [done   ] No action. Observed deployed commit matches observed HEAD e55ce00
+                 and observed configuration matches the hub.
 ```
 
 A bot can take the ready rows from JSON:
@@ -118,7 +119,7 @@ The packaged sample is `src/domain_fleet/data/sample_fleet.toml`. The ten hostna
 | funtimerental | stub | Repo is still the Hostinger initial commit. Replace it. |
 | bornfreethreads | live | Config diff. PHP on Hostinger is 8.1, the hub says 8.2. |
 | victorydraw | stub | No site repo yet. Create one and issue a deploy key to the bot. |
-| whdecklog | live | Deployed SHA matches HEAD. No action. |
+| whdecklog | live | Observed deployed SHA matches observed HEAD. No action. |
 | deckereverafter | live | PR #12 is blocked. Checks are failing. |
 | reliablerealtymanagement | stub | The repo is a real build. Hostinger is still the default page. Deploy it. |
 | kingslandgeorgiapd | live | Last commit is older than 90 days. Confirm the bot is still scheduled. |

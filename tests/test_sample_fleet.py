@@ -9,7 +9,8 @@ EXPECTED = {
     "grassandherb": {
         "kind": Kind.LIVE,
         "diffs": ["content"],
-        "ready": ["deploy"],
+        "ready": [],
+        "info": ["verify-deployment-sha"],
     },
     "funtimerental": {
         "kind": Kind.STUB,
@@ -71,7 +72,7 @@ def test_sample_scan_matches_the_demo_narrative(sample_report):
     assert summary.unknown == 0
     assert summary.content_diffs == 2
     assert summary.config_diffs == 1
-    assert summary.merge_ready == 8
+    assert summary.merge_ready == 7
     assert sample_report.scanned_at == "2026-10-01T00:00:00Z"
 
     by_slug = {card.slug: card for card in sample_report.cards}

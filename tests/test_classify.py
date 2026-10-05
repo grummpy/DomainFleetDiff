@@ -106,6 +106,12 @@ def test_linked_repo_without_observation_is_unknown():
     assert result.kind.value == "unknown"
 
 
+def test_real_repo_without_a_deployment_observation_is_unknown():
+    result = classify_site(_site(), Observation(None, _github()), min_content_files=2)
+    assert result.kind.value == "unknown"
+    assert "not enough signals" in result.reasons[0]
+
+
 @pytest.mark.parametrize(
     ("title", "expected"),
     [
