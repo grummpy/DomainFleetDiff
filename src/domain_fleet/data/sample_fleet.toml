@@ -1,0 +1,329 @@
+# Offline demo fleet for Domain Fleet Diff.
+# Names are sample fixtures for tests and `domain-fleet scan`. They are not
+# credentials, and the observations below are synthetic. Nothing here is a token.
+#
+# Hub pattern: grummpy/my_domains is the registry. Each site repo is pushed by
+# one dedicated bot and deploys to its own Hostinger website. This file is the
+# registry those bots and the owner share.
+
+schema = 1
+
+[hub]
+repo = "grummpy/my_domains"
+branch = "main"
+role = "Registry only. One record per domain, the site repo, and the bot allowed to push. The hub does not host the sites."
+
+[policy]
+stale_commit_days = 90
+min_content_files = 2
+
+[[sites]]
+slug = "saltydogcustoms"
+domain = "saltydogcustoms.com"
+name = "Salty Dog Customs"
+bot = "saltydog-bot"
+github_repo = "grummpy/saltydogcustoms"
+brand_markers = ["Salty Dog"]
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+
+[sites.hostinger]
+title = "Salty Dog Customs | Boat lettering and vinyl"
+body_excerpt = "Salty Dog Customs paints hull names and vinyl. Browse the gallery and request a quote."
+is_default_template = false
+fingerprint = "custom"
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+deployed_sha = "a11ce0000001"
+last_deploy_at = "2026-09-24T15:00:00Z"
+
+[sites.github]
+branch = "main"
+head_sha = "a11ce0000001"
+head_subject = "Add spring hull-wrap gallery"
+head_at = "2026-09-24T14:10:00Z"
+author = "saltydog-bot"
+content_files = ["index.html", "gallery.html", "about.html", "css/site.css"]
+
+[[sites.github.pulls]]
+number = 18
+title = "Publish hull-wrap pricing"
+mergeable = true
+checks = "passing"
+draft = false
+
+[[sites]]
+slug = "grassandherb"
+domain = "grassandherb.com"
+name = "Grass & Herb"
+bot = "grassandherb-bot"
+github_repo = "grummpy/grassandherb"
+brand_markers = ["Grass & Herb"]
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+
+[sites.hostinger]
+title = "Grass & Herb | Field apothecary"
+body_excerpt = "Grass & Herb lists tinctures and teas from the current drying rack. Shop notes and origin lots are on the site."
+is_default_template = false
+fingerprint = "custom"
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+deployed_sha = "b22aaa000001"
+last_deploy_at = "2026-09-08T11:00:00Z"
+
+[sites.github]
+branch = "main"
+head_sha = "b22bbb000002"
+head_subject = "Restock tincture copy"
+head_at = "2026-09-28T11:00:00Z"
+author = "grassandherb-bot"
+content_files = ["index.html", "shop.html", "css/site.css"]
+
+[[sites]]
+slug = "funtimerental"
+domain = "funtimerental.com"
+name = "Funtime Rental"
+bot = "funtimerental-bot"
+github_repo = "grummpy/funtimerental"
+brand_markers = ["Funtime"]
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+
+[sites.hostinger]
+title = "Website Coming Soon"
+body_excerpt = "Hostinger created this website and has not published a build."
+is_default_template = true
+fingerprint = "default"
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+deployed_sha = "c33ce0000001"
+last_deploy_at = "2026-08-01T12:05:00Z"
+
+[sites.github]
+branch = "main"
+head_sha = "c33ce0000001"
+head_subject = "Create Hostinger website"
+head_at = "2026-08-01T12:00:00Z"
+author = "funtimerental-bot"
+content_files = ["index.html"]
+
+[[sites]]
+slug = "bornfreethreads"
+domain = "bornfreethreads.com"
+name = "Born Free Threads"
+bot = "bornfree-bot"
+github_repo = "grummpy/bornfreethreads"
+brand_markers = ["Born Free"]
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+
+[sites.hostinger]
+title = "Born Free Threads | Small-batch apparel"
+body_excerpt = "Born Free Threads publishes the current lookbook, sizes, and where the cloth was milled."
+is_default_template = false
+fingerprint = "custom"
+php_version = "8.1"
+ssl = true
+document_root = "public_html"
+deployed_sha = "d44ce0000001"
+last_deploy_at = "2026-09-20T16:30:00Z"
+
+[sites.github]
+branch = "main"
+head_sha = "d44ce0000001"
+head_subject = "Publish fall lookbook"
+head_at = "2026-09-20T16:00:00Z"
+author = "bornfree-bot"
+content_files = ["index.html", "lookbook.html", "css/site.css"]
+
+[[sites]]
+slug = "victorydraw"
+domain = "victorydraw.com"
+name = "Victory Draw"
+bot = "victorydraw-bot"
+github_repo = ""
+brand_markers = ["Victory Draw"]
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+
+[sites.hostinger]
+title = "Parked Domain"
+body_excerpt = "The domain is registered and waiting for a first build."
+is_default_template = true
+fingerprint = "default"
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+last_deploy_at = "2026-06-01T00:00:00Z"
+
+[[sites]]
+slug = "whdecklog"
+domain = "whdecklog.com"
+name = "WH Deck Log"
+bot = "whdecklog-bot"
+github_repo = "grummpy/whdecklog"
+brand_markers = ["Deck Log"]
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+
+[sites.hostinger]
+title = "WH Deck Log | Maintenance notes"
+body_excerpt = "Deck Log records washes, oil, and board replacements for the house deck."
+is_default_template = false
+fingerprint = "custom"
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+deployed_sha = "e55ce0000001"
+last_deploy_at = "2026-09-18T09:20:00Z"
+
+[sites.github]
+branch = "main"
+head_sha = "e55ce0000001"
+head_subject = "Record September wash and oil"
+head_at = "2026-09-18T09:00:00Z"
+author = "whdecklog-bot"
+content_files = ["index.html", "log.html", "css/site.css"]
+
+[[sites]]
+slug = "deckereverafter"
+domain = "deckereverafter.com"
+name = "Decker Ever After"
+bot = "deckereverafter-bot"
+github_repo = "grummpy/deckereverafter"
+brand_markers = ["Decker"]
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+
+[sites.hostinger]
+title = "Decker Ever After | Wedding weekend"
+body_excerpt = "Decker Ever After holds the weekend schedule, stay notes, and the ceremony map."
+is_default_template = false
+fingerprint = "custom"
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+deployed_sha = "f66ce0000001"
+last_deploy_at = "2026-09-26T18:10:00Z"
+
+[sites.github]
+branch = "main"
+head_sha = "f66ce0000001"
+head_subject = "Set the weekend landing page"
+head_at = "2026-09-26T18:00:00Z"
+author = "deckereverafter-bot"
+content_files = ["index.html", "weekend.html", "css/site.css"]
+
+[[sites.github.pulls]]
+number = 12
+title = "Add ceremony timeline"
+mergeable = true
+checks = "failing"
+draft = false
+
+[[sites]]
+slug = "reliablerealtymanagement"
+domain = "reliablerealtymanagement.com"
+name = "Reliable Realty Management"
+bot = "rrm-bot"
+github_repo = "grummpy/reliablerealtymanagement"
+brand_markers = ["Reliable Realty"]
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+
+[sites.hostinger]
+title = "Coming Soon"
+body_excerpt = "You have successfully created a website with Hostinger. Reliable Realty Management will publish tenant notes here."
+is_default_template = true
+fingerprint = "default"
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+last_deploy_at = "2026-05-02T08:00:00Z"
+
+[sites.github]
+branch = "main"
+head_sha = "a77ce0000001"
+head_subject = "Add tenant portal copy"
+head_at = "2026-09-15T13:00:00Z"
+author = "rrm-bot"
+content_files = ["index.html", "tenants.html", "owners.html", "listings.html", "css/site.css"]
+
+[[sites]]
+slug = "kingslandgeorgiapd"
+domain = "kingslandgeorgiapd.com"
+name = "Kingsland Georgia PD"
+bot = "kingsland-bot"
+github_repo = "grummpy/kingslandgeorgiapd"
+brand_markers = ["Kingsland"]
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+
+[sites.hostinger]
+title = "Kingsland Georgia PD | Public bulletin"
+body_excerpt = "Kingsland public bulletin for posted notes. This fixture is a sample site card, not an official system."
+is_default_template = false
+fingerprint = "custom"
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+deployed_sha = "b88ce0000001"
+last_deploy_at = "2026-04-02T15:30:00Z"
+
+[sites.github]
+branch = "main"
+head_sha = "b88ce0000001"
+head_subject = "Post the April bulletin"
+head_at = "2026-04-02T15:00:00Z"
+author = "kingsland-bot"
+content_files = ["index.html", "bulletin.html", "css/site.css"]
+
+[[sites]]
+slug = "corruptofficertracker"
+domain = "corruptofficertracker.com"
+name = "Corrupt Officer Tracker"
+bot = "cot-bot"
+github_repo = "grummpy/corruptofficertracker"
+brand_markers = ["Corrupt Officer Tracker"]
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+
+[sites.hostinger]
+title = "Coming Soon"
+body_excerpt = "The public index is still on an open pull request."
+is_default_template = true
+fingerprint = "default"
+php_version = "8.2"
+ssl = true
+document_root = "public_html"
+deployed_sha = "c99ce0000001"
+last_deploy_at = "2026-07-01T10:05:00Z"
+
+[sites.github]
+branch = "main"
+head_sha = "c99ce0000001"
+head_subject = "Create Hostinger website"
+head_at = "2026-07-01T10:00:00Z"
+author = "cot-bot"
+content_files = ["index.html"]
+
+[[sites.github.pulls]]
+number = 4
+title = "Replace the coming-soon page with the public index"
+mergeable = true
+checks = "passing"
+draft = false
