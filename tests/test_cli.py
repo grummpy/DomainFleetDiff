@@ -33,7 +33,7 @@ def test_scan_writes_json_and_html(tmp_path: Path):
     )
     assert result.returncode == 0, result.stderr
     assert "packaged sample fleet" in result.stderr
-    assert "8 merge-ready" in result.stdout
+    assert "7 merge-ready" in result.stdout
     payload = json.loads(json_path.read_text(encoding="utf-8"))
     assert payload["summary"]["stub"] == 4
     assert "saltydogcustoms.com" in html_path.read_text(encoding="utf-8")

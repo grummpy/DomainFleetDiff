@@ -2,8 +2,8 @@
 
 The scan never merges a pull request and never deploys. Rows with status
 ``ready`` are safe for the owner or that site's bot to do next. ``blocked``
-rows explain the gate. ``info`` rows are watch items. ``done`` means the
-deployed site matches the repo and the hub.
+rows explain the gate. ``info`` rows are watch items. ``done`` means observed
+deployment metadata matches the observed repository HEAD and hub values.
 """
 
 from __future__ import annotations
@@ -55,8 +55,7 @@ def build_checklist(
 
     content = next((item for item in diffs if item.kind == DiffKind.CONTENT), None)
     if content is not None:
-        subject = github.head_subject if github is not None else None
-        checks.append(_deploy_row(site, content, pr_blocked=pr_blocked, subject=subject))
+        checks.append(_deploy_row(site, content, pr_blocked=pr_blocked))
 
     for item in diffs:
         if item.kind == DiffKind.CONFIG:
@@ -67,6 +66,22 @@ def build_checklist(
                     text=_config_text(site, item),
                 )
             )
+
+    # Drift deliberately ignores unavailable fields so fixture snapshots can
+    # be partial. A lack of a diff is therefore not proof of alignment.
+    alignment_gaps = _deployment_alignment_gaps(site, observation)
+    if classification.kind == Kind.LIVE and alignment_gaps:
+        checks.append(
+            Check(
+                id="verify-deployment",
+                status=CheckStatus.INFO,
+                text=(
+                    "Deployment alignment is unverified; record "
+                    + ", ".join(alignment_gaps)
+                    + "."
+                ),
+            )
+        )
 
     placeholder = github is not None and is_placeholder_repo(github, min_content_files)
     ready_prs = [item for item in checks if item.id.startswith("pr-") and item.status == CheckStatus.READY]
@@ -136,6 +151,7 @@ def build_checklist(
     if (
         classification.kind == Kind.LIVE
         and not diffs
+        and not alignment_gaps
         and not any(item.status in actionable for item in checks)
     ):
         sha = short_sha(github.head_sha) if github is not None else "HEAD"
@@ -143,7 +159,10 @@ def build_checklist(
             Check(
                 id="noop",
                 status=CheckStatus.DONE,
-                text=f"No action. Deployed commit matches {sha} and the hub config.",
+                text=(
+                    f"No action. Observed deployed commit matches observed HEAD {sha} "
+                    "and observed configuration matches the hub."
+                ),
             )
         )
 
@@ -187,7 +206,16 @@ def _pull_row(pull: PullRequest) -> tuple[CheckStatus, str]:
     return CheckStatus.READY, f'Merge #{pull.number} "{title}" — checks passing'
 
 
-def _deploy_row(site: SiteSpec, diff: Diff, *, pr_blocked: bool, subject: str | None) -> Check:
+def _deploy_row(site: SiteSpec, diff: Diff, *, pr_blocked: bool) -> Check:
+    if diff.field == "sha":
+        return Check(
+            id="verify-deployment-sha",
+            status=CheckStatus.INFO,
+            text=(
+                "Deployment SHA differs from repository HEAD. Ancestry and the intended "
+                "release target were not observed; validate them before any deployment action."
+            ),
+        )
     if pr_blocked:
         return Check(
             id="deploy",
@@ -205,15 +233,39 @@ def _deploy_row(site: SiteSpec, diff: Diff, *, pr_blocked: bool, subject: str | 
                 "and the repo has a real build"
             ),
         )
-    label = f' "{subject}"' if subject else ""
+    # Content diffs are currently limited to the SHA and unpublished cases.
+    # Keep a conservative fallback if another content-diff kind is added.
     return Check(
-        id="deploy",
-        status=CheckStatus.READY,
-        text=(
-            f"Redeploy {site.domain} so Hostinger serves {short_sha(diff.expected)}{label}"
-            f" — deployed {short_sha(diff.deployed)} is behind"
-        ),
+        id="verify-deployment-content",
+        status=CheckStatus.INFO,
+        text=f"Verify deployment content before acting: {diff.summary}",
     )
+
+
+def _deployment_alignment_gaps(site: SiteSpec, observation: Observation) -> list[str]:
+    """Return observations still needed before reporting a verified match."""
+
+    page = observation.hostinger
+    github = observation.github
+    gaps: list[str] = []
+    if page is None:
+        return ["a Hostinger deployment observation"]
+    if github is None:
+        gaps.append("a repository HEAD observation")
+    else:
+        if not page.deployed_sha:
+            gaps.append("the deployed commit SHA")
+        if not github.head_sha:
+            gaps.append("the repository HEAD SHA")
+    configured_fields = (
+        ("PHP version", site.php_version, page.php_version),
+        ("SSL state", site.ssl, page.ssl),
+        ("document root", site.document_root, page.document_root),
+    )
+    for label, expected, observed in configured_fields:
+        if expected is not None and observed is None:
+            gaps.append(f"the observed {label}")
+    return gaps
 
 
 def _config_text(site: SiteSpec, diff: Diff) -> str:

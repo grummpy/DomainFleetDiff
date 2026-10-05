@@ -74,13 +74,15 @@ def _rows(observation: Observation, site: SiteSpec | None = None):
     return kind, diffs, checks
 
 
-def test_sha_mismatch_is_a_content_diff_with_a_ready_redeploy():
+def test_sha_mismatch_is_a_content_diff_without_an_unsupported_redeploy_claim():
     kind, diffs, checks = _rows(Observation(_page(), _github(head_sha="bbb222")))
     assert kind.kind.value == "live"
     assert diffs[0].kind.value == "content"
     assert diffs[0].field == "sha"
-    assert checks[0].id == "deploy"
-    assert checks[0].status.value == "ready"
+    assert checks[0].id == "verify-deployment-sha"
+    assert checks[0].status.value == "info"
+    assert "behind" not in checks[0].text
+    assert "validate them before any deployment action" in checks[0].text
 
 
 def test_php_drift_is_config():
@@ -114,6 +116,17 @@ def test_aligned_live_site_is_done():
     assert diffs == ()
     assert checks[0].id == "noop"
     assert checks[0].status.value == "done"
+
+
+def test_partial_deployment_observation_is_not_reported_as_aligned():
+    page = _page(deployed_sha=None, php_version=None, ssl=None, document_root=None)
+    _, diffs, checks = _rows(Observation(page, _github()))
+    assert diffs == ()
+    assert checks[0].id == "verify-deployment"
+    assert checks[0].status.value == "info"
+    assert "deployed commit SHA" in checks[0].text
+    assert "observed PHP version" in checks[0].text
+    assert not any(item.status.value == "done" for item in checks)
 
 
 def test_stale_live_commit_is_info_and_not_a_failure_row():
