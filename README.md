@@ -145,8 +145,8 @@ Matching is case-insensitive. Title markers apply to the title only, so a real p
 
 **Live:**
 
-- The deployed page is not a stub, and a brand marker appears in the title or body, or the fingerprint is `custom`, or the repo is a real build.
-- If there is no homepage observation, a real repo (enough content files, not a placeholder commit) is live, and the reason says the call came from the repo only.
+- A deployment/homepage observation is present, the deployed page is not a stub, and a brand marker appears in the title or body, or the fingerprint is `custom`, or the repo is a real build.
+- A repository observation can describe source code, but cannot establish that it has been deployed. Without a deployment observation, even a real repository is **unknown**.
 
 Anything else is **unknown**. The checklist asks for a homepage and a HEAD, then a rescan.
 
